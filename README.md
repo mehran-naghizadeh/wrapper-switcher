@@ -9,7 +9,10 @@ This handy extension empowers you to modify the surrounding context of specific 
 
 ## Activation
 
-Place your cursor anywhere within the text as needed. Then, simply press `Ctrl+Shift+P` and type `Switch Quotes`. Done!
+Select your desired range of text surrounded by `{`, `(`, `'` or `"` . Then, simply press `Ctrl+Shift+P` and type `Switch Quotes`. Done!
+
+![activation-select-range](https://github.com/mehran-naghizadeh/wrapper-switcher/assets/24450563/59546ce8-22e8-4771-b8a2-2c9b871bb850)
+
 
 ## Known Issues
 
