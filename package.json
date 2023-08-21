@@ -4,6 +4,7 @@
   "description": "Switch between single– and double– quotes. Switch between parentheses and curly braces.",
   "version": "0.0.1",
   "license": "MIT",
+  "publisher": "behnegar-mehran-naghizadeh",
   "engines": {
     "vscode": "^1.81.0"
   },
