@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "wrapper-switcher.switchQuotes",
-        "title": "Hello World"
+        "title": "Switch Quotes"
       }
     ]
   },
