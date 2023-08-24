@@ -20,6 +20,8 @@ const closing: Record<string, string> = {
 function figureOut(text: string, position: vscode.Position): [string, number, number] | null {
   const line = text.split('\n')[position.line];
 
+  if (!line) { return null; }
+
   const beforeCursor = line.substring(0, position.character);
 
   const matches = [...beforeCursor.matchAll(/[\("']/g)];
@@ -70,6 +72,8 @@ function switchBraces(text: string): string {
 }
 
 function update(text: string, position: vscode.Position): string {
+  if (!text) { return 'xxx'; }
+
   const situation = figureOut(text, position);
   if (!situation) { return text; }
 
