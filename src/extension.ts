@@ -17,7 +17,7 @@ const closing: Record<string, string> = {
   "'": "'",
 };
 
-function figureOut(text: string, position: vscode.Position): [string, number, number] | null {
+function figureOut(text: string, position: vscode.Position, document: vscode.TextDocument): [string, number, number] | null {
   const line = text.split('\n')[position.line];
 
   if (!line) {
@@ -28,7 +28,7 @@ function figureOut(text: string, position: vscode.Position): [string, number, nu
 
   const beforeCursor = line.substring(0, position.character);
 
-  const matches = [...beforeCursor.matchAll(/[\("']/g)];
+  const matches = [...beforeCursor.matchAll(/[\({"']/g)];
 
   while(matches.length) {
     const match = matches.pop()!;
@@ -75,10 +75,10 @@ function switchBraces(text: string): string {
   return surrondedByCurlyBraces ? `(${innerContent})` : `{${innerContent}}`;
 }
 
-function update(text: string, position: vscode.Position): string {
+function update(text: string, position: vscode.Position, document: vscode.TextDocument): string {
   if (!text) { return 'xxx'; }
 
-  const situation = figureOut(text, position);
+  const situation = figureOut(text, position, document);
   if (!situation) { return text; }
 
   const [character, startIndex, stopIndex] = situation;
@@ -120,7 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
       const position = selection.active;
       const line = document.lineAt(position.line);
 
-      const switchedText = update(line.text, position);
+      const switchedText = update(line.text, position, document);
       editor.edit(editBuilder => editBuilder.replace(line.range, switchedText));
     } else {
       const text = document.getText(selection);
