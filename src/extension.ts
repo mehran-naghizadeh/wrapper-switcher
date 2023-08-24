@@ -20,7 +20,11 @@ const closing: Record<string, string> = {
 function figureOut(text: string, position: vscode.Position): [string, number, number] | null {
   const line = text.split('\n')[position.line];
 
-  if (!line) { return null; }
+  if (!line) {
+    vscode.window.showInformationMessage('Please select a range, including the wrappers.');
+
+    return null;
+  }
 
   const beforeCursor = line.substring(0, position.character);
 
@@ -113,8 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
     const { document, selection } = editor;
 
     if (selection.isEmpty) {
-      const position = editor.selection.active;
-      const { document } = editor;
+      const position = selection.active;
       const line = document.lineAt(position.line);
 
       const switchedText = update(line.text, position);
