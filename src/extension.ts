@@ -4,21 +4,21 @@
 import * as vscode from 'vscode';
 
 const substitution: Record<string, Record<string, string>> = {
-  '(': { opening: '{', closing: '}' },
-  '{': { opening: '(', closing: ')' },
+  '(': { opening: '{{', closing: '}}' },
+  '{{': { opening: '(', closing: ')' },
   '"': { opening: "'", closing: "'" },
   "'": { opening: '"', closing: '"' },
 };
 
 const closing: Record<string, string> = {
   '(': ')',
-  '{': '}',
+  '{{': '}}',
   '"': '"',
   "'": "'",
 };
 
 function figureOut(text: string, position: vscode.Position, document: vscode.TextDocument): [string, number, number] | null {
-  const line = text.split('\n')[position.line];
+  const line = document.lineAt(position.line).text;
 
   if (!line) {
     vscode.window.showInformationMessage('Please select a range, including the wrappers.');
@@ -28,7 +28,7 @@ function figureOut(text: string, position: vscode.Position, document: vscode.Tex
 
   const beforeCursor = line.substring(0, position.character);
 
-  const matches = [...beforeCursor.matchAll(/[\({"']/g)];
+  const matches = [...beforeCursor.matchAll(/{{|[\("']/g)];
 
   while(matches.length) {
     const match = matches.pop()!;
@@ -52,8 +52,6 @@ function switchQuotes(text: string): string {
   const isSingleQuoted = text.startsWith("'") && text.endsWith("'");
   const isDoubleQuoted = text.startsWith('"') && text.endsWith('"');
 
-  console.log({ isSingleQuoted, isDoubleQuoted });
-
   if (!isSingleQuoted && !isDoubleQuoted) { return text; }
 
   const innerContent = text.slice(1, -1);
@@ -67,8 +65,6 @@ function switchBraces(text: string): string {
   const surrondedByCurlyBraces = text.startsWith("{") && text.endsWith("}");
   const surrondedByParentheses = text.startsWith('(') && text.endsWith(')');
 
-  console.log({ surrondedByCurlyBraces, surrondedByParentheses });
-
   if (!surrondedByCurlyBraces && !surrondedByParentheses) { return text; }
 
   const innerContent = text.slice(1, -1);
@@ -76,8 +72,6 @@ function switchBraces(text: string): string {
 }
 
 function update(text: string, position: vscode.Position, document: vscode.TextDocument): string {
-  if (!text) { return 'xxx'; }
-
   const situation = figureOut(text, position, document);
   if (!situation) { return text; }
 
@@ -88,8 +82,8 @@ function update(text: string, position: vscode.Position, document: vscode.TextDo
   const { opening, closing } = substitution[character];
 
   const before = text.substring(0, startIndex);
-  const content = text.substring(startIndex + 1, stopIndex);
-  const after = text.substring(stopIndex + 1);
+  const content = text.substring(startIndex + character.length, stopIndex);
+  const after = text.substring(stopIndex + character.length);
 
   return `${before}${opening}${content}${closing}${after}`;
 }
