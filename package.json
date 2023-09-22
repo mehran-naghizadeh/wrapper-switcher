@@ -2,7 +2,7 @@
   "name": "wrapper-switcher",
   "displayName": "Wrapper Switcher",
   "description": "Switch between single– and double– quotes. Switch between parentheses and curly braces.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "publisher": "behnegar-mehran-naghizadeh",
   "engines": {

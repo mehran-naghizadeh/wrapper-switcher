@@ -108,19 +108,27 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    const { document, selection } = editor;
+    const { document, selections } = editor;
 
-    if (selection.isEmpty) {
-      const position = selection.active;
-      const line = document.lineAt(position.line);
+    // Create a WorkspaceEdit to accumulate the edit operations
+    const workspaceEdit = new vscode.WorkspaceEdit();
 
-      const switchedText = update(line.text, position, document);
-      editor.edit(editBuilder => editBuilder.replace(line.range, switchedText));
-    } else {
-      const text = document.getText(selection);
-      const switchedText = switchBraces(switchQuotes(text));
-      editor.edit((editBuilder) => editBuilder.replace(selection, switchedText));
-    }
+    selections.forEach((selection, index) => {
+      if (selection.isEmpty) {
+        const position = selection.active;
+        const line = document.lineAt(position.line);
+
+        const switchedText = update(line.text, position, document);
+        workspaceEdit.replace(document.uri, line.range, switchedText);
+      } else {
+        const text = document.getText(selection);
+        const switchedText = switchBraces(switchQuotes(text));
+        workspaceEdit.replace(document.uri, selection, switchedText);
+      }
+    });
+
+    // Apply all edit operations together
+    vscode.workspace.applyEdit(workspaceEdit);
   });
 
   context.subscriptions.push(disposable);
