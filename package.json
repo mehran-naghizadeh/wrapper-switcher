@@ -2,7 +2,7 @@
   "name": "wrapper-switcher",
   "displayName": "Wrapper Switcher",
   "description": "Switch between single– and double– quotes. Switch between parentheses and curly braces.",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "license": "MIT",
   "publisher": "behnegar-mehran-naghizadeh",
   "engines": {
@@ -15,6 +15,10 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "wrapper-switcher.prune",
+        "title": "Prune"
+      },
       {
         "command": "wrapper-switcher.switchQuotes",
         "title": "Switch Quotes"
